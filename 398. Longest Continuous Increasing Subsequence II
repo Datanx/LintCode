@@ -1,0 +1,55 @@
+public class Solution {
+    /**
+     * @param matrix: A 2D-array of integers
+     * @return: an integer
+     */
+    int[][] f;
+    int n, m;
+     
+    public int longestContinuousIncreasingSubsequence2(int[][] A) {
+        if (A.length == 0) {
+            return 0;
+        }
+        
+        n = A.length;
+        m = A[0].length;
+        int ans = 0;
+        f = new int[n][m]; // f[i][j] means the longest continuous increasing path from (i,j)
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                f[i][j] = -1; // dp[i][j] has not been calculated yet
+            }
+        }
+        
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                search(i, j, A);
+                ans = Math.max(ans, f[i][j]);
+            }
+        }
+        
+        return ans;
+    }
+    
+    int[] dx = {1, -1, 0, 0};
+    int[] dy = {0, 0, 1, -1};
+    
+    void search(int x, int y, int[][] A) {
+        if (f[x][y] != -1) { // if dp[i][j] has been calculated, return directly
+            return;
+        }
+        
+        int nx, ny;
+        f[x][y] = 1;
+        for (int i = 0; i < 4; ++i) {
+            nx = x + dx[i];
+            ny = y + dy[i];
+            if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
+                if (A[nx][ny] > A[x][y]) {
+                    search(nx, ny, A); // f[nx][ny] must be calcuted
+                    f[x][y] = Math.max(f[x][y], f[nx][ny] + 1);
+                }
+            }
+        }
+    }
+}
