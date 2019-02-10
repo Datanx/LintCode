@@ -1,0 +1,71 @@
+public class Solution {
+    /*
+     * @param A: An integer array
+     * @return: A list of integers includes the index of the first number and the index of the last number
+     */
+     
+    class Result{
+        public int maxSum;
+        public int leftIdx, rightidx;
+    }
+    
+    // coef = 1: find the maximum non-empty subarray
+    // coef = -1: find the maximum non-empty subarray
+    // A[i] *= coef
+    Result findMax(int[] A, int coef) {
+        int j, nowSum = 0, prevMinsum = 0, prevMinIdx = -1;
+        Result res = new Result();
+        res.maxSum = Integer.MIN_VALUE;
+        for(j = 0; j < A.length; ++j){
+            nowSum += A[j] * coef;
+            // Sj - prevMinsum
+            if(nowSum - prevMinsum > res.maxSum){
+                res.maxSum = nowSum - prevMinsum;
+                res.leftIdx = prevMinIdx; // i - 1
+                res.rightidx = j;
+            }
+            
+            if(nowSum < prevMinsum){
+                prevMinsum = nowSum;
+                prevMinIdx = j;
+            }
+        }
+        return res;
+    }
+    
+    
+     public List<Integer> continuousSubarraySumII(int[] A) {
+         Result max = findMax(A, 1);
+         Result min = findMax(A, -1);
+         min.maxSum *= -1;
+         
+         int totSum = 0;
+         for(int i = 0; i < A.length; ++i){
+             totSum += A[i];
+         }
+         
+         List<Integer> res = new ArrayList<>();
+         if(max.maxSum >= totSum - min.maxSum){
+             res.add(max.leftIdx + 1);
+             res.add(max.rightidx);
+         }
+         else{
+             // special case
+             if(min.leftIdx == -1 && min.rightidx == A.length - 1){
+                 res.add(max.leftIdx + 1);
+                 res.add(max.rightidx);
+             }
+             else{
+                 // use complementary interval for min interval
+                 // [min.leftIdx+1...min.rightidx]
+                 // min.rightidx + 1... len-1, 0, 1, ... min.leftIdx
+                 res.add(min.rightidx + 1);
+                 res.add(min.leftIdx);
+             }
+                 
+         }
+         return res;
+     }
+    
+    
+}
