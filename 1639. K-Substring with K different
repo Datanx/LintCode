@@ -1,0 +1,40 @@
+class Solution {
+public:
+    /**
+     * @param stringIn: The original string.
+     * @param K: The length of substrings.
+     * @return: return the count of substring of length K and exactly K distinct characters.
+     */
+    int KSubstring(string &stringIn, int K) {
+        // Write your code here
+        
+        vector<int> charMap(256, 0);
+        set<string> s;
+        int cnt = 0, res = 0;
+        for(int i = 0; i < K && i < stringIn.length(); i++){
+            if(!charMap[stringIn[i]]){
+                cnt++;
+            }
+            charMap[stringIn[i]]++;
+        }
+        
+        if(cnt == K){
+            s.insert(stringIn.substr(0, K));
+        }
+        
+        for(int i = K; i < stringIn.length(); i++){
+            charMap[stringIn[i - K]]--;
+            if(!charMap[stringIn[i - K]])
+                cnt--;
+            if(!charMap[stringIn[i]])
+                cnt++;
+                
+            charMap[stringIn[i]]++;
+            if(cnt == K){
+                s.insert(stringIn.substr(i - K + 1, K));
+            }
+        }
+        
+        return s.size();
+    }
+};
