@@ -1,0 +1,31 @@
+class Solution {
+public:
+    /**
+     * @param restaurant: 
+     * @param n: 
+     * @return: nothing
+     */
+    vector<vector<int>> nearestRestaurant(vector<vector<int>> &restaurant, int n) {
+        // Write your code here
+        vector<vector<int>> ans;
+        if ((int)restaurant.size() == 0 || (int)restaurant.size() < n){
+            return ans;
+        }
+        int N = restaurant.size();
+        vector<pair<int, int>> dist(N);
+        for (int i = 0; i < N; i++){
+            dist[i].first = restaurant[i][0] * restaurant[i][0] + restaurant[i][1] * restaurant[i][1];
+            dist[i].second = i;
+        }
+        sort(dist.begin(), dist.end());
+        int cnt = 0;
+        for (int i = 0; i < N; i++){
+            if (restaurant[i][0] * restaurant[i][0] + restaurant[i][1] * restaurant[i][1] <= dist[n - 1].first){
+                cnt++;
+                ans.emplace_back(restaurant[i]);
+                if (cnt == n) return ans;
+            }
+        }
+        return ans;
+    }
+};
