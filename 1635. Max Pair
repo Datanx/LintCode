@@ -1,0 +1,52 @@
+/*
+两个数组，分别排好序用两个指针i和j，遍历两个数组，
+一个从小到大，一个从大到小，< x则，i ++，> x则j --
+*/
+class Solution {
+public:
+    vector<vector<int>> getAns(vector<int> &a, vector<int> &b, int target) {
+        std::sort(a.begin(), a.end());
+        std::sort(b.begin(), b.end());
+        vector<vector<int>> pairs;
+        int low = 0, high = b.size() - 1;
+
+        if (a.empty() || b.empty() || a[0] + b[0] > target) 
+        {
+            return pairs;
+        }
+        
+        int closest = a[0]+b[0];
+        while (low < a.size() && high >= 0) 
+        {
+            int sum = a[low] + b[high];
+            if (sum > target) 
+            {
+                high--;
+            } else {
+                closest = (target - closest) > target - sum  ? sum : closest;
+                low++;
+            }
+        }
+        
+        low = 0; high = b.size()-1;
+        while (low < a.size() && high >=0) 
+        {
+            int sum = a[low] + b[high];
+            if (sum > closest) {
+                high--;
+            } 
+            else if (sum < closest) 
+            {
+                low++;
+            } 
+            else 
+            {
+                pairs.emplace_back(vector<int>{a[low], b[high]});
+                low++;
+                high--;
+            }
+        }
+        
+        return pairs;
+    }
+};
