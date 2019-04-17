@@ -1,0 +1,67 @@
+class Solution {
+public:
+    /**
+     * @param A: an integer array
+     * @param target: An integer
+     * @param k: An integer
+     * @return: an integer array
+     */
+    vector<int> kClosestNumbers(vector<int> &A, int target, int k) {
+        // write your code here
+        int left = findLowerClosest(A, target);
+        int right = left + 1;
+        
+        vector<int> results;
+        for(int i = 0; i < k; i++){
+            if(isLeftCloser(A, target, left, right)){
+                results.push_back(A[left]);
+                left--;
+            }
+            else{
+                results.push_back(A[right]);
+                right++;
+            }
+        }
+        return results;
+    }
+    
+private:
+    bool isLeftCloser(vector<int>& A, int target, int left, int right){
+        if(left < 0){
+            return false;
+        }
+        
+        if(right >= A.size()){
+            return true;
+        }
+        
+        if(target - A[left] != A[right] - target){
+            return target - A[left] < A[right] - target;
+        }
+        
+        return true;
+    }
+    int findLowerClosest(vector<int>& A, int target){
+        // find the last element smaller than target
+        int start = 0, end = A.size() - 1;
+        while(start + 1 < end){
+            int mid = start + (end - start) / 2;
+            if(A[mid] < target){
+                start = mid;
+            }
+            else{
+                end = mid;
+            }
+        }
+        
+        if(A[end] < target){
+            return end;
+        }
+        
+        if(A[start] < target){
+            return start;
+        }
+        
+        return -1;
+    }
+};
