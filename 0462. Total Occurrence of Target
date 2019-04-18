@@ -1,0 +1,56 @@
+class Solution {
+public:
+    /**
+     * @param A: A an integer array sorted in ascending order
+     * @param target: An integer
+     * @return: An integer
+     */
+    int totalOccurrence(vector<int> &A, int target) {
+        int n = A.size();
+        if(n == 0)
+            return 0;
+        if(A[n - 1] < target || A[0] > target)
+            return 0;
+        
+        int mid, start = 0, end = n - 1;
+        int posL, posR;
+        while(start + 1 < end){
+            mid = start + (end - start) / 2;
+            if(A[mid] == target)
+                end = mid;
+            else if(A[mid] < target)
+                start = mid;
+            else
+                end = mid;
+        }
+        
+        if(A[start] == target)
+            posL = start;
+        else if(A[end] == target)
+            posL = end;
+        else
+            return 0;
+            
+        start = 0;
+        end = n - 1;    
+        while(start + 1 < end){
+            mid = start + (end - start) / 2;
+            if(A[mid] == target)
+                start = mid;
+            else if(A[mid] < target)
+                start = mid;
+            else
+                end = mid;
+        }
+        
+        if(A[end] == target)
+            posR = end;
+        else if(A[start] == target)
+            posR = start;
+        else
+            return 0;
+            
+        return posR - posL + 1;
+        
+    }
+};
