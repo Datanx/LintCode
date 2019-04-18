@@ -1,0 +1,46 @@
+/*首先特判一下首个元素. 然后设定 idx = 0 为查找的下标, jump = 1 为向后跳跃的长度.
+每次循环将 idx 向后移动 jump 个元素, 并将 jump 翻倍. 而如果移动后的位置不小于 target, 
+则 jump 缩小至一半. 即我们在保证每次跳跃后的 idx 的位置都小于target的前提下, 倍增式地跳跃, 
+以此保证 O(logn) 的时间复杂度. 循环终止的条件就是 jump == 0, 就是说, 这时 idx + 1 的位置以
+及不小于 target 了 (此时idx位置的仍然是小于target). 也就是说, 到最后idx指向的元素是: 最大
+的小于target的元素. 返回答案前判断一下 idx + 1 是否 target 即可.
+*/
+
+/**
+ * Definition of ArrayReader:
+ * 
+ * class ArrayReader {
+ * public:
+ *     int get(int index) {
+ *          // return the number on given index, 
+ *          // return 2147483647 if the index is invalid.
+ *     }
+ * };
+ */
+class Solution {
+public:
+    /*
+     * @param reader: An instance of ArrayReader.
+     * @param target: An integer
+     * @return: An integer which is the first index of target.
+     */
+    int searchBigSortedArray(ArrayReader * reader, int target) {
+        int firstElement = reader->get(0);
+        if(firstElement == target)
+            return 0;
+        else if( firstElement > target)
+            return -1;
+            
+        int idx = 0, jump = 1;
+        while(jump){
+            while(jump && reader->get(idx + jump) >= target) // 越界时返回INT_MAX, 必然不小于target
+                jump >>= 1;
+            idx += jump;
+            jump <<= 1;   // 当jump为0时, 左移一位不影响它的值, 不影响循环结束
+        }
+        if(reader->get(idx + 1) == target)
+            return idx + 1;
+        else
+            return -1;
+    }
+};
