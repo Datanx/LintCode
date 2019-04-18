@@ -1,0 +1,62 @@
+/*
+由于是排序数组，两次二分查找，一个是第一次比target-1大的位置，
+一个是第一次比他target大的位置。返回即可
+*/
+class Solution {
+public:
+    /**
+     * @param A: an integer sorted array
+     * @param target: an integer to be inserted
+     * @return: a list of length 2, [index1, index2]
+     */
+    vector<int> searchRange(vector<int> &A, int target) {
+        if(A.size() == 0)
+            return vector<int>{-1, -1};
+        vector<int> res(2);
+        int ansl = -1;
+        int start = 0, end = A.size() - 1;
+        int mid;
+        while(start + 1 < end){
+            mid = start + (end - start) / 2;
+            if(A[mid] == target)
+                end = mid;
+            else if(A[mid] < target)
+                start = mid;
+            else
+                end = mid;
+        }
+        
+        if(A[start] == target)
+            res[0] = start;
+        else if(A[end] == target)
+            res[0] = end;
+        else{
+            res[0] = res[1] = -1;
+            return res;
+        }
+        
+        start = 0;
+        end = A.size() - 1;
+        while(start + 1 < end){
+            mid = start + (end - start) / 2;
+            if(A[mid] == target)
+                start = mid;
+            else if(A[mid] < target)
+                start = mid;
+            else
+                end = mid;
+        }
+        if(A[end] == target)
+            res[1] = end;
+        else if(A[start] == target)
+            res[1] = start;
+        else{
+            res[0] = res[1] = -1;
+            return res;
+        }
+        
+        return res;
+            
+        
+    }
+};
