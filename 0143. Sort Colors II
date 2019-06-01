@@ -1,0 +1,35 @@
+// 采用分治法
+
+class Solution {
+public:
+    /**
+     * @param colors: A list of integer
+     * @param k: An integer
+     * @return: nothing
+     */
+    void sortColors2(vector<int> &colors, int k) {
+        partition(colors, 0, colors.size() - 1, 1, k);
+    }
+    
+    void partition(vector<int>& colors, int start, int end, int startk, int endk){
+        if(start >= end || startk >= endk)
+            return;
+        
+        int midk = (startk + endk) / 2;
+        int i = start, j = end;
+        while(i <= j){
+            while(i <= j && colors[i] <= midk){
+                i++;
+            }
+            while(i <= j && colors[j] > midk){
+                j--;
+            }
+            if(i <= j){
+                swap(colors[i++], colors[j--]);
+            }
+        }
+        
+        partition(colors, start, j, startk, midk);
+        partition(colors, i, end, midk + 1, endk);
+    }
+};
